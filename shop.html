@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop - Florist & Cake 🛒</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/shop.css">
+</head>
+<body>
+    <div id="header-container"></div>
+    
+    <div id="breadcrumb-container"></div>
+
+    <main class="main-content">
+        <section class="shop-section">
+            <h1>----------</h1>
+            
+            <!-- Enhanced Filters -->
+            <div class="shop-filters">
+                <div class="search-filter">
+                    <input type="text" id="search-input" placeholder="Search products...">
+                </div>
+                
+                <div class="filter-group">
+                    <label for="category-filter">Category</label>
+                    <select id="category-filter">
+                        <option value="all">All Products</option>
+                        <option value="cake">Cake</option>
+                        <option value="bouquet">Bouquet</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label for="sort-filter">Sort By</label>
+                    <select id="sort-filter">
+                        <option value="featured">Featured</option>
+                        <option value="name">Name (A-Z)</option>
+                        <option value="price-low">Price: Low to High</option>
+                        <option value="price-high">Price: High to Low</option>
+                        <option value="newest">Newest First</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Active Filters Display -->
+            <div class="active-filters" id="active-filters"></div>
+
+            <!-- View Toggle (Optional) -->
+            <div class="view-toggle">
+                <button class="view-btn active" data-view="grid">
+                    <span>Grid View</span>
+                </button>
+                <button class="view-btn" data-view="list">
+                    <span>List View</span>
+                </button>
+            </div>
+            
+            <!-- Products Container -->
+            <div class="product-grid" id="products-container">
+                <!-- Products will be loaded dynamically -->
+                <div class="loading-spinner">
+                    <div class="spinner"></div>
+                    <p class="loading-text">Loading amazing products...</p>
+                </div>
+            </div>
+
+            <!-- Empty State (shown when no products match) -->
+            <div class="empty-state" id="empty-state" style="display: none;">
+                <div class="empty-state-icon">🔍</div>
+                <h3>No Products Found</h3>
+                <p>Try adjusting your filters or search terms</p>
+                <button class="btn-primary" onclick="clearAllFilters()">Clear All Filters</button>
+            </div>
+        </section>
+    </main>
+
+    <div id="footer-container"></div>
+
+    <script type="module" src="js/components.js"></script>
+    <script type="module" src="js/shop.js"></script>
+    <script>
+        // View toggle functionality
+        document.querySelectorAll('.view-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                const view = this.dataset.view;
+                const productsContainer = document.getElementById('products-container');
+                
+                if (view === 'list') {
+                    productsContainer.style.gridTemplateColumns = '1fr';
+                    productsContainer.querySelectorAll('.product-card').forEach(card => {
+                        card.style.display = 'flex';
+                        card.style.flexDirection = 'row';
+                    });
+                } else {
+                    productsContainer.style.gridTemplateColumns = '';
+                    productsContainer.querySelectorAll('.product-card').forEach(card => {
+                        card.style.display = '';
+                        card.style.flexDirection = '';
+                    });
+                }
+            });
+        });
+
+        // Clear filters function
+        function clearAllFilters() {
+            document.getElementById('search-input').value = '';
+            document.getElementById('category-filter').value = 'all';
+            document.getElementById('sort-filter').value = 'featured';
+            document.getElementById('active-filters').innerHTML = '';
+            document.getElementById('empty-state').style.display = 'none';
+            // Trigger your shop.js filter function here
+        }
+
+        // Search functionality
+        let searchTimeout;
+        document.getElementById('search-input').addEventListener('input', function(e) {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                // Trigger your search function in shop.js
+                console.log('Searching for:', e.target.value);
+            }, 300);
+        });
+    </script>
+</body>
+</html>

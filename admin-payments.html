@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Management - Admin</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #2C1810 0%, #1a0f0a 100%);
+            min-height: 100vh;
+        }
+
+        .admin-layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .admin-sidebar {
+            width: 280px;
+            background: linear-gradient(180deg, #3d2817 0%, #2d1f13 100%);
+            color: #f5deb3;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            box-shadow: 4px 0 30px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            border-right: 1px solid rgba(222, 184, 135, 0.1);
+        }
+
+        .admin-sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .admin-sidebar::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .admin-sidebar::-webkit-scrollbar-thumb {
+            background: #8B7355;
+            border-radius: 10px;
+        }
+
+        .admin-logo {
+            padding: 24px;
+            border-bottom: 1px solid rgba(222, 184, 135, 0.2);
+            background: linear-gradient(135deg, rgba(139, 115, 85, 0.2), transparent);
+        }
+
+        .admin-logo h2 {
+            background: linear-gradient(135deg, #DEB887, #F4A460);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 0;
+            font-size: 24px;
+            font-weight: 700;
+            text-shadow: 0 2px 10px rgba(222, 184, 135, 0.3);
+        }
+
+        .admin-profile {
+            padding: 24px;
+            border-bottom: 1px solid rgba(222, 184, 135, 0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+            background: linear-gradient(135deg, rgba(139, 115, 85, 0.1), transparent);
+        }
+
+        .profile-picture-wrapper {
+            position: relative;
+            width: 100px;
+            height: 100px;
+        }
+
+        .profile-picture {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 4px solid rgba(222, 184, 135, 0.4);
+            overflow: hidden;
+            background: linear-gradient(135deg, #8B7355, #A0826D);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s;
+        }
+
+        .profile-picture:hover {
+            border-color: #DEB887;
+            transform: scale(1.05);
+            box-shadow: 0 12px 32px rgba(222, 184, 135, 0.3);
+        }
+
+        .profile-picture img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-placeholder {
+            font-size: 48px;
+            color: #f5deb3;
+        }
+
+        .profile-upload-btn {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #DEB887, #D2691E);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+            transition: all 0.3s;
+            border: 3px solid #3d2817;
+        }
+
+        .profile-upload-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(222, 184, 135, 0.5);
+        }
+
+        .profile-upload-btn input {
+            display: none;
+        }
+
+        .profile-info {
+            text-align: center;
+            width: 100%;
+        }
+
+        .profile-name {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            color: #f5deb3;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .profile-role {
+            font-size: 13px;
+            color: #DEB887;
+            background: rgba(222, 184, 135, 0.2);
+            padding: 4px 12px;
+            border-radius: 12px;
+            display: inline-block;
+            border: 1px solid rgba(222, 184, 135, 0.3);
+        }
+
+        .admin-nav {
+            padding: 24px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .nav-link {
+            padding: 14px 20px;
+            color: rgba(245, 222, 179, 0.8);
+            text-decoration: none;
+            border-radius: 12px;
+            transition: all 0.3s;
+            border: none;
+            background: transparent;
+            text-align: left;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 500;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-link:hover {
+            background: rgba(222, 184, 135, 0.15);
+            color: #f5deb3;
+            transform: translateX(4px);
+        }
+
+        .nav-link.active {
+            background: linear-gradient(90deg, rgba(222, 184, 135, 0.25), rgba(210, 105, 30, 0.15));
+            color: #f5deb3;
+            font-weight: 600;
+            border-left: 4px solid #DEB887;
+            box-shadow: 0 4px 12px rgba(222, 184, 135, 0.2);
+        }
+
+        .logout-btn {
+            margin-top: 24px;
+            border-top: 1px solid rgba(222, 184, 135, 0.2);
+            padding-top: 24px;
+            background: rgba(244, 67, 54, 0.15) !important;
+            color: #ff9999 !important;
+        }
+
+        .logout-btn:hover {
+            background: rgba(244, 67, 54, 0.25) !important;
+        }
+
+        .admin-main {
+            margin-left: 280px;
+            flex: 1;
+            padding: 32px;
+            min-height: 100vh;
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+            background: rgba(61, 40, 23, 0.8);
+            backdrop-filter: blur(20px);
+            padding: 24px 32px;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(222, 184, 135, 0.2);
+        }
+
+        .admin-header h1 {
+            margin: 0;
+            background: linear-gradient(135deg, #DEB887, #F4A460);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 32px;
+            font-weight: 800;
+        }
+
+        .products-table {
+            background: rgba(61, 40, 23, 0.6);
+            backdrop-filter: blur(10px);
+            padding: 32px;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            overflow-x: auto;
+            border: 1px solid rgba(222, 184, 135, 0.2);
+        }
+
+        .products-table table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 12px;
+        }
+
+        .products-table thead {
+            background: linear-gradient(135deg, #8B7355, #A0826D);
+            border-radius: 12px;
+        }
+
+        .products-table th {
+            text-align: left;
+            padding: 16px 20px;
+            color: white;
+            font-weight: 600;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .products-table th:first-child {
+            border-radius: 12px 0 0 12px;
+        }
+
+        .products-table th:last-child {
+            border-radius: 0 12px 12px 0;
+        }
+
+        .products-table tbody tr {
+            background: rgba(139, 115, 85, 0.2);
+            transition: all 0.3s;
+            border: 1px solid rgba(222, 184, 135, 0.1);
+        }
+
+        .products-table tbody tr:hover {
+            background: rgba(139, 115, 85, 0.35);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .products-table td {
+            padding: 16px 20px;
+            border: none;
+            vertical-align: middle;
+            color: #f5deb3;
+        }
+
+        .products-table td:first-child {
+            border-radius: 12px 0 0 12px;
+        }
+
+        .products-table td:last-child {
+            border-radius: 0 12px 12px 0;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .status-badge.verified {
+            background: rgba(76, 175, 80, 0.2);
+            color: #4CAF50;
+            border: 1px solid rgba(76, 175, 80, 0.4);
+        }
+
+        .status-badge.pending {
+            background: rgba(255, 193, 7, 0.2);
+            color: #FFC107;
+            border: 1px solid rgba(255, 193, 7, 0.4);
+        }
+
+        .status-badge.cancelled {
+            background: rgba(244, 67, 54, 0.2);
+            color: #F44336;
+            border: 1px solid rgba(244, 67, 54, 0.4);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-view {
+            padding: 8px 16px;
+            background: linear-gradient(135deg, #8B7355, #A0826D);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(222, 184, 135, 0.3);
+        }
+
+        .btn-view:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(139, 115, 85, 0.5);
+        }
+
+        .btn-primary {
+            padding: 8px 16px;
+            background: linear-gradient(135deg, #8B7355, #A0826D);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #3d2817, #2d1f13);
+            border-radius: 24px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(222, 184, 135, 0.3);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 28px 32px;
+            background: linear-gradient(135deg, #8B7355, #A0826D);
+            color: white;
+            border-radius: 24px 24px 0 0;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .modal-close {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(90deg);
+        }
+
+        .modal-body {
+            padding: 32px;
+            color: #f5deb3;
+        }
+
+        @media (max-width: 768px) {
+            .admin-sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+            .admin-main {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-layout">
+        <aside class="admin-sidebar">
+            <div class="admin-logo">
+                <h2>🌹 Admin Panel</h2>
+            </div>
+
+            <div class="admin-profile">
+                <div class="profile-picture-wrapper">
+                    <div class="profile-picture">
+                        <img id="admin-profile-pic" src="" alt="Admin" style="display: none;">
+                        <div id="admin-profile-placeholder" class="profile-placeholder">👤</div>
+                    </div>
+                    <label class="profile-upload-btn" title="Upload profile picture">
+                        <input type="file" id="admin-avatar-input" accept="image/*">
+                        📷
+                    </label>
+                </div>
+                <div class="profile-info">
+                    <div class="profile-name" id="admin-name">Admin User</div>
+                    <div class="profile-role">Administrator</div>
+                </div>
+            </div>
+
+            <nav class="admin-nav">
+                <a href="admin-dashboard.html" class="nav-link">
+                    <span>📊</span> Dashboard
+                </a>
+                <a href="admin-products.html" class="nav-link">
+                    <span>🛍️</span> Products
+                </a>
+                <a href="admin-orders.html" class="nav-link">
+                    <span>📦</span> Orders
+                </a>
+                <a href="admin-users.html" class="nav-link">
+                    <span>👥</span> Users
+                </a>
+                <a href="admin-riders.html" class="nav-link">
+                    <span>🛵</span> Delivery Riders
+                </a>
+                <a href="admin-payments.html" class="nav-link active">
+                    <span>💳</span> Payments
+                </a>
+                <button id="logout-btn" class="nav-link logout-btn">
+                    <span>🚪</span> Logout
+                </button>
+            </nav>
+        </aside>
+
+        <main class="admin-main">
+            <header class="admin-header">
+                <h1>💳 Payment Management</h1>
+            </header>
+
+            <div class="products-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Customer</th>
+                            <th>Amount</th>
+                            <th>Receipt #</th>
+                            <th>Payment Status</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="payments-tbody">
+                        <tr>
+                            <td colspan="7" style="text-align: center; padding: 40px;">
+                                <div style="font-size: 16px; color: #DEB887;">Loading payments...</div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <div class="modal" id="payment-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>💳 Payment Details</h2>
+                <button class="modal-close" id="close-payment-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="payment-details-content"></div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="js/admin-payments.js"></script>
+</body>
+</html>

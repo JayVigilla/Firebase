@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Florist & Cake Shop</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #2C1810 0%, #1a0f0a 100%);
+            min-height: 100vh;
+        }
+
+        .admin-layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar - Brown Tan Theme */
+        .admin-sidebar {
+            width: 280px;
+            background: linear-gradient(180deg, #3d2817 0%, #2d1f13 100%);
+            color: #f5deb3;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            box-shadow: 4px 0 30px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            border-right: 1px solid rgba(222, 184, 135, 0.1);
+        }
+
+        .admin-sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .admin-sidebar::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .admin-sidebar::-webkit-scrollbar-thumb {
+            background: #8B7355;
+            border-radius: 10px;
+        }
+
+        .admin-logo {
+            padding: 24px;
+            border-bottom: 1px solid rgba(222, 184, 135, 0.2);
+            background: linear-gradient(135deg, rgba(139, 115, 85, 0.2), transparent);
+        }
+
+        .admin-logo h2 {
+            background: linear-gradient(135deg, #DEB887, #F4A460);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 0;
+            font-size: 24px;
+            font-weight: 700;
+            text-shadow: 0 2px 10px rgba(222, 184, 135, 0.3);
+        }
+
+        /* Admin Profile Section */
+        .admin-profile {
+            padding: 24px;
+            border-bottom: 1px solid rgba(222, 184, 135, 0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+            background: linear-gradient(135deg, rgba(139, 115, 85, 0.1), transparent);
+        }
+
+        .profile-picture-wrapper {
+            position: relative;
+            width: 100px;
+            height: 100px;
+        }
+
+        .profile-picture {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 4px solid rgba(222, 184, 135, 0.4);
+            overflow: hidden;
+            background: linear-gradient(135deg, #8B7355, #A0826D);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s;
+        }
+
+        .profile-picture:hover {
+            border-color: #DEB887;
+            transform: scale(1.05);
+            box-shadow: 0 12px 32px rgba(222, 184, 135, 0.3);
+        }
+
+        .profile-picture img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-placeholder {
+            font-size: 48px;
+            color: #f5deb3;
+        }
+
+        .profile-upload-btn {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #DEB887, #D2691E);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+            transition: all 0.3s;
+            border: 3px solid #3d2817;
+        }
+
+        .profile-upload-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(222, 184, 135, 0.5);
+        }
+
+        .profile-upload-btn input {
+            display: none;
+        }
+
+        .profile-info {
+            text-align: center;
+            width: 100%;
+        }
+
+        .profile-name {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            color: #f5deb3;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .profile-role {
+            font-size: 13px;
+            color: #DEB887;
+            background: rgba(222, 184, 135, 0.2);
+            padding: 4px 12px;
+            border-radius: 12px;
+            display: inline-block;
+            border: 1px solid rgba(222, 184, 135, 0.3);
+        }
+
+        /* Navigation */
+        .admin-nav {
+            padding: 24px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .nav-link {
+            padding: 14px 20px;
+            color: rgba(245, 222, 179, 0.8);
+            text-decoration: none;
+            border-radius: 12px;
+            transition: all 0.3s;
+            border: none;
+            background: transparent;
+            text-align: left;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 500;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            position: relative;
+        }
+
+        .nav-link:hover {
+            background: rgba(222, 184, 135, 0.15);
+            color: #f5deb3;
+            transform: translateX(4px);
+        }
+
+        .nav-link.active {
+            background: linear-gradient(90deg, rgba(222, 184, 135, 0.25), rgba(210, 105, 30, 0.15));
+            color: #f5deb3;
+            font-weight: 600;
+            border-left: 4px solid #DEB887;
+            box-shadow: 0 4px 12px rgba(222, 184, 135, 0.2);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: 8px;
+            right: 16px;
+            background: #ff4444;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 700;
+            animation: pulse 2s infinite;
+            box-shadow: 0 2px 8px rgba(255, 68, 68, 0.5);
+        }
+
+        .logout-btn {
+            margin-top: 24px;
+            border-top: 1px solid rgba(222, 184, 135, 0.2);
+            padding-top: 24px;
+            background: rgba(244, 67, 54, 0.15) !important;
+            color: #ff9999 !important;
+        }
+
+        .logout-btn:hover {
+            background: rgba(244, 67, 54, 0.25) !important;
+        }
+
+        /* Main Content */
+        .admin-main {
+            margin-left: 280px;
+            flex: 1;
+            padding: 32px;
+            min-height: 100vh;
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+            background: rgba(61, 40, 23, 0.8);
+            backdrop-filter: blur(20px);
+            padding: 24px 32px;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(222, 184, 135, 0.2);
+        }
+
+        .admin-header h1 {
+            margin: 0;
+            background: linear-gradient(135deg, #DEB887, #F4A460);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 32px;
+            font-weight: 800;
+        }
+
+        .admin-user {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: linear-gradient(135deg, #8B7355, #A0826D);
+            padding: 10px 20px;
+            border-radius: 50px;
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: rgba(61, 40, 23, 0.6);
+            backdrop-filter: blur(10px);
+            padding: 28px;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(222, 184, 135, 0.2);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #DEB887, #D2691E);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6);
+            border-color: rgba(222, 184, 135, 0.4);
+        }
+
+        .stat-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            background: linear-gradient(135deg, rgba(222, 184, 135, 0.2), rgba(210, 105, 30, 0.1));
+            border: 2px solid rgba(222, 184, 135, 0.3);
+        }
+
+        .stat-info h3 {
+            margin: 0 0 8px 0;
+            font-size: 36px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #DEB887, #F4A460);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-info p {
+            margin: 0;
+            color: #DEB887;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        .dashboard-card {
+            background: rgba(61, 40, 23, 0.6);
+            backdrop-filter: blur(10px);
+            padding: 28px;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(222, 184, 135, 0.2);
+        }
+
+        .dashboard-card h2 {
+            margin: 0 0 20px 0;
+            color: #f5deb3;
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .order-item {
+            padding: 16px;
+            background: rgba(139, 115, 85, 0.2);
+            border-radius: 12px;
+            margin-bottom: 12px;
+            border-left: 4px solid #DEB887;
+            border: 1px solid rgba(222, 184, 135, 0.2);
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .order-header strong {
+            color: #f5deb3;
+        }
+
+        .order-item p {
+            color: #DEB887;
+        }
+
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .status-badge.status-pending {
+            background: rgba(255, 193, 7, 0.2);
+            color: #FFC107;
+            border: 1px solid rgba(255, 193, 7, 0.4);
+        }
+
+        .status-badge.status-processing,
+        .status-badge.status-ready {
+            background: rgba(33, 150, 243, 0.2);
+            color: #2196F3;
+            border: 1px solid rgba(33, 150, 243, 0.4);
+        }
+
+        .status-badge.status-assigned,
+        .status-badge.status-picked_up,
+        .status-badge.status-in_transit {
+            background: rgba(156, 39, 176, 0.2);
+            color: #9C27B0;
+            border: 1px solid rgba(156, 39, 176, 0.4);
+        }
+
+        .status-badge.status-delivered,
+        .status-badge.status-done {
+            background: rgba(76, 175, 80, 0.2);
+            color: #4CAF50;
+            border: 1px solid rgba(76, 175, 80, 0.4);
+        }
+
+        .status-badge.status-cancelled {
+            background: rgba(244, 67, 54, 0.2);
+            color: #F44336;
+            border: 1px solid rgba(244, 67, 54, 0.4);
+        }
+
+        .status-count {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px;
+            border-bottom: 1px solid rgba(222, 184, 135, 0.2);
+            color: #DEB887;
+        }
+
+        .status-count strong {
+            color: #f5deb3;
+        }
+
+        .status-count:last-child {
+            border-bottom: none;
+        }
+
+        /* Enhanced Feedback Styles */
+        .feedback-item {
+            padding: 24px;
+            background: linear-gradient(135deg, rgba(139, 115, 85, 0.25), rgba(139, 115, 85, 0.15));
+            border-radius: 16px;
+            margin-bottom: 16px;
+            border: 1px solid rgba(222, 184, 135, 0.3);
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        .feedback-item:hover {
+            background: linear-gradient(135deg, rgba(139, 115, 85, 0.35), rgba(139, 115, 85, 0.25));
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+            border-color: rgba(222, 184, 135, 0.5);
+        }
+
+        .feedback-actions {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            display: flex;
+            gap: 8px;
+            z-index: 10;
+        }
+
+        .feedback-action-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 2px solid rgba(222, 184, 135, 0.3);
+            background: rgba(61, 40, 23, 0.8);
+            color: #DEB887;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            transition: all 0.3s;
+            font-weight: bold;
+            line-height: 1;
+            padding: 0;
+        }
+
+        .feedback-action-btn:hover {
+            background: rgba(222, 184, 135, 0.3);
+            border-color: #DEB887;
+            transform: scale(1.1);
+        }
+
+        .feedback-action-btn.delete-btn {
+            border-color: rgba(244, 67, 54, 0.3);
+            color: #f44336;
+        }
+
+        .feedback-action-btn.delete-btn:hover {
+            background: rgba(244, 67, 54, 0.2);
+            border-color: #f44336;
+        }
+
+        .feedback-action-btn.chat-btn {
+            border-color: rgba(33, 150, 243, 0.3);
+            color: #2196F3;
+        }
+
+        .feedback-action-btn.chat-btn:hover {
+            background: rgba(33, 150, 243, 0.2);
+            border-color: #2196F3;
+        }
+
+        .feedback-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+            gap: 12px;
+            padding-right: 80px;
+        }
+
+        .feedback-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .feedback-rating {
+            font-size: 20px;
+            line-height: 1;
+            display: flex;
+            gap: 2px;
+            flex-shrink: 0;
+            align-items: center;
+        }
+        
+        .feedback-rating .star {
+            color: #FFD700;
+            text-shadow: 0 2px 4px rgba(255, 215, 0, 0.3);
+        }
+
+        .feedback-customer {
+            font-weight: 700;
+            color: #f5deb3;
+            margin-bottom: 6px;
+            font-size: 15px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .feedback-order {
+            font-size: 12px;
+            color: #DEB887;
+            background: rgba(222, 184, 135, 0.2);
+            padding: 4px 10px;
+            border-radius: 8px;
+            display: inline-block;
+            border: 1px solid rgba(222, 184, 135, 0.3);
+            font-weight: 600;
+        }
+
+        .feedback-comment {
+            color: #DEB887;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-top: 12px;
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            border-left: 3px solid #DEB887;
+        }
+
+        .feedback-date {
+            font-size: 11px;
+            color: rgba(222, 184, 135, 0.6);
+            margin-top: 8px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Admin Reply Section */
+        .admin-reply-section {
+            margin-top: 16px;
+            padding: 16px;
+            background: rgba(33, 150, 243, 0.1);
+            border-radius: 10px;
+            border-left: 3px solid #2196F3;
+        }
+
+        .admin-reply-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            color: #2196F3;
+            font-weight: 700;
+            font-size: 13px;
+        }
+
+        .admin-reply-text {
+            color: #DEB887;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .admin-reply-form {
+            margin-top: 16px;
+            padding: 16px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            border: 1px solid rgba(222, 184, 135, 0.2);
+        }
+
+        .admin-reply-form textarea {
+            width: 100%;
+            padding: 12px;
+            background: rgba(61, 40, 23, 0.6);
+            border: 1px solid rgba(222, 184, 135, 0.3);
+            border-radius: 8px;
+            color: #f5deb3;
+            font-family: inherit;
+            font-size: 14px;
+            resize: vertical;
+            min-height: 80px;
+            margin-bottom: 12px;
+        }
+
+        .admin-reply-form textarea:focus {
+            outline: none;
+            border-color: #2196F3;
+            box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+        }
+
+        .admin-reply-form textarea::placeholder {
+            color: rgba(222, 184, 135, 0.5);
+        }
+
+        .admin-reply-form-actions {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+        }
+
+        .btn-reply {
+            padding: 8px 16px;
+            background: linear-gradient(135deg, #2196F3, #1976D2);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            transition: all 0.3s;
+        }
+
+        .btn-reply:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(33, 150, 243, 0.4);
+        }
+
+        .btn-cancel {
+            padding: 8px 16px;
+            background: rgba(222, 184, 135, 0.2);
+            color: #DEB887;
+            border: 1px solid rgba(222, 184, 135, 0.3);
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            transition: all 0.3s;
+        }
+
+        .btn-cancel:hover {
+            background: rgba(222, 184, 135, 0.3);
+            border-color: #DEB887;
+        }
+
+        /* Chart Container */
+        .chart-container {
+            position: relative;
+            height: 400px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px 0;
+        }
+
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            height: 400px;
+        }
+
+        /* Full Width Chart Card */
+        .full-width-card {
+            grid-column: 1 / -1;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: linear-gradient(135deg, #2a1810, #1a0f0a);
+            padding: 32px;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            border: 2px solid rgba(222, 184, 135, 0.2);
+            animation: modalSlideIn 0.3s ease-out;
+            max-width: 500px;
+            width: 90%;
+        }
+
+        .modal-content h3 {
+            margin-bottom: 16px;
+            color: #f5deb3;
+            font-size: 24px;
+        }
+
+        .modal-content p {
+            margin-bottom: 24px;
+            color: #DEB887;
+            line-height: 1.6;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+
+        .btn-secondary {
+            padding: 10px 24px;
+            border: 2px solid rgba(222, 184, 135, 0.3);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+            background: transparent;
+            color: #DEB887;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(222, 184, 135, 0.1);
+            border-color: rgba(222, 184, 135, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .btn-delete {
+            padding: 10px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+            background: linear-gradient(135deg, #f44336, #d32f2f);
+            color: white;
+            box-shadow: 0 4px 12px rgba(244, 67, 54, 0.3);
+        }
+
+        .btn-delete:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(244, 67, 54, 0.4);
+        }
+
+        /* Animations */
+        @keyframes slideIn {
+            from { transform: translateX(400px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes slideOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(400px); opacity: 0; }
+        }
+
+        @keyframes slideInBounce {
+            0% {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            60% {
+                transform: translateX(-20px);
+                opacity: 1;
+            }
+            80% {
+                transform: translateX(10px);
+            }
+            100% {
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes bounceIn {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.2);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .admin-sidebar {
+                width: 240px;
+            }
+            .admin-main {
+                margin-left: 240px;
+            }
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .admin-sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+            .admin-main {
+                margin-left: 0;
+            }
+            .admin-header {
+                flex-direction: column;
+                gap: 16px;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            .feedback-header {
+                padding-right: 80px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-layout">
+        <aside class="admin-sidebar">
+            <div class="admin-logo">
+                <h2>🌹 Admin Panel</h2>
+            </div>
+
+            <div class="admin-profile">
+                <div class="profile-picture-wrapper">
+                    <div class="profile-picture">
+                        <img id="admin-profile-pic" src="" alt="Admin" style="display: none;">
+                        <div id="admin-profile-placeholder" class="profile-placeholder">👤</div>
+                    </div>
+                    <label class="profile-upload-btn" title="Upload profile picture">
+                        <input type="file" id="admin-avatar-input" accept="image/*">
+                        📷
+                    </label>
+                </div>
+                <div class="profile-info">
+                    <div class="profile-name" id="admin-name">Admin User</div>
+                    <div class="profile-role">Administrator</div>
+                </div>
+            </div>
+
+            <nav class="admin-nav">
+                <a href="admin-dashboard.html" class="nav-link active">
+                    <span>📊</span> Dashboard
+                </a>
+                <a href="admin-products.html" class="nav-link">
+                    <span>🛍️</span> Products
+                </a>
+                <a href="admin-orders.html" class="nav-link">
+                    <span>📦</span> Orders
+                </a>
+                <a href="admin-users.html" class="nav-link">
+                    <span>👥</span> Users
+                </a>
+                <a href="admin-riders.html" class="nav-link">
+                    <span>🛵</span> Delivery Riders
+                </a>
+                <a href="admin-feedback.html" class="nav-link">
+                    <span>⭐</span> Customer Feedback
+                    <span class="notification-badge" id="feedback-badge" style="display: none;">0</span>
+                </a>
+                <a href="admin-payments.html" class="nav-link">
+                    <span>💳</span> Payments
+                </a>
+                <button id="logout-btn" class="nav-link logout-btn">
+                    <span>🚪</span> Logout
+                </button>
+            </nav>
+        </aside>
+
+        <main class="admin-main">
+            <header class="admin-header">
+                <h1>Dashboard Overview</h1>
+                <div class="admin-user">
+                    <span>👤</span>
+                    <span id="header-admin-name">Admin</span>
+                </div>
+            </header>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">📦</div>
+                    <div class="stat-info">
+                        <h3 id="total-orders">0</h3>
+                        <p>Total Orders</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">👥</div>
+                    <div class="stat-info">
+                        <h3 id="total-users">0</h3>
+                        <p>Total Users</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🛍️</div>
+                    <div class="stat-info">
+                        <h3 id="total-products">0</h3>
+                        <p>Total Products</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🛵</div>
+                    <div class="stat-info">
+                        <h3 id="total-riders">0</h3>
+                        <p>Active Riders</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">💰</div>
+                    <div class="stat-info">
+                        <h3 id="total-revenue">₱0.00</h3>
+                        <p>Total Revenue</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="dashboard-card full-width-card">
+                    <h2>🏆 Best Selling Products</h2>
+                    <div class="chart-container">
+                        <div class="chart-wrapper">
+                            <canvas id="bestSellersChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-card">
+                    <h2>📋 Recent Orders</h2>
+                    <div id="recent-orders">
+                        <div style="text-align: center; padding: 40px; color: #999;">
+                            <div style="font-size: 16px;">Loading orders...</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-card">
+                    <h2>📊 Order Status</h2>
+                    <div id="order-status">
+                        <div class="status-count">
+                            <span>Pending</span>
+                            <strong>0</strong>
+                        </div>
+                        <div class="status-count">
+                            <span>Processing</span>
+                            <strong>0</strong>
+                        </div>
+                        <div class="status-count">
+                            <span>Delivery</span>
+                            <strong>0</strong>
+                        </div>
+                        <div class="status-count">
+                            <span>Done</span>
+                            <strong>0</strong>
+                        </div>
+                        <div class="status-count">
+                            <span>Cancelled</span>
+                            <strong>0</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-card">
+                    <h2>⭐ Recent Customer Feedback</h2>
+                    <div id="recent-feedback">
+                        <div style="text-align: center; padding: 40px; color: #999;">
+                            <div style="font-size: 16px;">Loading feedback...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Load JavaScript Module -->
+    <script type="module" src="js/admin-dashboard.js"></script>
+</body>
+</html>

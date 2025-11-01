@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmation - Florist & Cake Shop</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/checkout.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+    <div id="header-container"></div>
+    
+    <div id="breadcrumb-container"></div>
+
+    <main class="main-content">
+        <div class="checkout-container">
+            <div class="checkout-steps">
+                <div class="step completed" data-step="1">
+                    <span class="step-number">✓</span>
+                    <span class="step-label">Checkout</span>
+                </div>
+                <div class="step completed" data-step="2">
+                    <span class="step-number">✓</span>
+                    <span class="step-label">Payment</span>
+                </div>
+                <div class="step active" data-step="3">
+                    <span class="step-number">3</span>
+                    <span class="step-label">Confirmation</span>
+                </div>
+            </div>
+
+            <div class="confirmation-content">
+                <div class="confirmation-message">
+                    <div class="success-icon">✓</div>
+                    <h1>Order Placed Successfully!</h1>
+                    <p>Thank you for your order. We'll process it shortly.</p>
+                    <p class="order-number">Order #<span id="order-id"></span></p>
+                </div>
+
+                <div class="order-details" id="order-details"></div>
+
+                <div class="confirmation-actions">
+                    <button class="btn-primary" onclick="downloadReceipt()">Download Receipt (PDF)</button>
+                    <button class="btn-secondary" onclick="window.location.href='order-tracking.html'">Track Order</button>
+                    <button class="btn-secondary" onclick="window.location.href='index.html'">Back to Home</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div id="footer-container"></div>
+
+    <script type="module" src="js/components.js"></script>
+    <script type="module" src="js/confirmation.js"></script>
+</body>
+</html>

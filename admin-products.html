@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Management - Admin</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #2C1810 0%, #1a0f0a 100%);
+            min-height: 100vh;
+        }
+
+        .admin-layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar - Brown Tan Theme */
+        .admin-sidebar {
+            width: 280px;
+            background: linear-gradient(180deg, #3d2817 0%, #2d1f13 100%);
+            color: #f5deb3;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            box-shadow: 4px 0 30px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            border-right: 1px solid rgba(222, 184, 135, 0.1);
+        }
+
+        .admin-sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .admin-sidebar::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .admin-sidebar::-webkit-scrollbar-thumb {
+            background: #8B7355;
+            border-radius: 10px;
+        }
+
+        .admin-logo {
+            padding: 24px;
+            border-bottom: 1px solid rgba(222, 184, 135, 0.2);
+            background: linear-gradient(135deg, rgba(139, 115, 85, 0.2), transparent);
+        }
+
+        .admin-logo h2 {
+            background: linear-gradient(135deg, #DEB887, #F4A460);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 0;
+            font-size: 24px;
+            font-weight: 700;
+            text-shadow: 0 2px 10px rgba(222, 184, 135, 0.3);
+        }
+
+        /* Admin Profile Section */
+        .admin-profile {
+            padding: 24px;
+            border-bottom: 1px solid rgba(222, 184, 135, 0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+            background: linear-gradient(135deg, rgba(139, 115, 85, 0.1), transparent);
+        }
+
+        .profile-picture-wrapper {
+            position: relative;
+            width: 100px;
+            height: 100px;
+        }
+
+        .profile-picture {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 4px solid rgba(222, 184, 135, 0.4);
+            overflow: hidden;
+            background: linear-gradient(135deg, #8B7355, #A0826D);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s;
+        }
+
+        .profile-picture:hover {
+            border-color: #DEB887;
+            transform: scale(1.05);
+            box-shadow: 0 12px 32px rgba(222, 184, 135, 0.3);
+        }
+
+        .profile-picture img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-placeholder {
+            font-size: 48px;
+            color: #f5deb3;
+        }
+
+        .profile-upload-btn {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #DEB887, #D2691E);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+            transition: all 0.3s;
+            border: 3px solid #3d2817;
+        }
+
+        .profile-upload-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(222, 184, 135, 0.5);
+        }
+
+        .profile-upload-btn input {
+            display: none;
+        }
+
+        .profile-info {
+            text-align: center;
+            width: 100%;
+        }
+
+        .profile-name {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            color: #f5deb3;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .profile-role {
+            font-size: 13px;
+            color: #DEB887;
+            background: rgba(222, 184, 135, 0.2);
+            padding: 4px 12px;
+            border-radius: 12px;
+            display: inline-block;
+            border: 1px solid rgba(222, 184, 135, 0.3);
+        }
+
+        /* Navigation */
+        .admin-nav {
+            padding: 24px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .nav-link {
+            padding: 14px 20px;
+            color: rgba(245, 222, 179, 0.8);
+            text-decoration: none;
+            border-radius: 12px;
+            transition: all 0.3s;
+            border: none;
+            background: transparent;
+            text-align: left;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 500;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            position: relative;
+        }
+
+        .nav-link:hover {
+            background: rgba(222, 184, 135, 0.15);
+            color: #f5deb3;
+            transform: translateX(4px);
+        }
+
+        .nav-link.active {
+            background: linear-gradient(90deg, rgba(222, 184, 135, 0.25), rgba(210, 105, 30, 0.15));
+            color: #f5deb3;
+            font-weight: 600;
+            border-left: 4px solid #DEB887;
+            box-shadow: 0 4px 12px rgba(222, 184, 135, 0.2);
+        }
+
+        .logout-btn {
+            margin-top: 24px;
+            border-top: 1px solid rgba(222, 184, 135, 0.2);
+            padding-top: 24px;
+            background: rgba(244, 67, 54, 0.15) !important;
+            color: #ff9999 !important;
+        }
+
+        .logout-btn:hover {
+            background: rgba(244, 67, 54, 0.25) !important;
+        }
+
+        /* Main Content */
+        .admin-main {
+            margin-left: 280px;
+            flex: 1;
+            padding: 32px;
+            min-height: 100vh;
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+            background: rgba(61, 40, 23, 0.8);
+            backdrop-filter: blur(20px);
+            padding: 24px 32px;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(222, 184, 135, 0.2);
+        }
+
+        .admin-header h1 {
+            margin: 0;
+            background: linear-gradient(135deg, #DEB887, #F4A460);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 32px;
+            font-weight: 800;
+        }
+
+        .btn-primary {
+            padding: 14px 28px;
+            background: linear-gradient(135deg, #8B7355, #A0826D);
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(222, 184, 135, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(139, 115, 85, 0.5);
+            background: linear-gradient(135deg, #A0826D, #8B7355);
+        }
+
+        /* Products Table */
+        .products-table {
+            background: rgba(61, 40, 23, 0.6);
+            backdrop-filter: blur(10px);
+            padding: 32px;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            overflow-x: auto;
+            border: 1px solid rgba(222, 184, 135, 0.2);
+        }
+
+        .products-table table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 12px;
+        }
+
+        .products-table thead {
+            background: linear-gradient(135deg, #8B7355, #A0826D);
+            border-radius: 12px;
+        }
+
+        .products-table th {
+            text-align: left;
+            padding: 16px 20px;
+            color: #fff;
+            font-weight: 600;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .products-table th:first-child {
+            border-radius: 12px 0 0 12px;
+        }
+
+        .products-table th:last-child {
+            border-radius: 0 12px 12px 0;
+        }
+
+        .products-table tbody tr {
+            background: rgba(139, 115, 85, 0.2);
+            transition: all 0.3s;
+            border: 1px solid rgba(222, 184, 135, 0.1);
+        }
+
+        .products-table tbody tr:hover {
+            background: rgba(139, 115, 85, 0.35);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .products-table td {
+            padding: 16px 20px;
+            border: none;
+            vertical-align: middle;
+            color: #f5deb3;
+        }
+
+        .products-table td:first-child {
+            border-radius: 12px 0 0 12px;
+        }
+
+        .products-table td:last-child {
+            border-radius: 0 12px 12px 0;
+        }
+
+        .product-image-thumb {
+            width: 70px;
+            height: 70px;
+            object-fit: cover;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+            border: 3px solid rgba(222, 184, 135, 0.3);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-edit, .btn-delete {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-edit {
+            background: linear-gradient(135deg, #8B7355, #A0826D);
+            color: white;
+            border: 1px solid rgba(222, 184, 135, 0.3);
+        }
+
+        .btn-delete {
+            background: linear-gradient(135deg, #8B4513, #A0522D);
+            color: white;
+        }
+
+        .btn-edit:hover, .btn-delete:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #3d2817, #2d1f13);
+            border-radius: 24px;
+            max-width: 700px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(222, 184, 135, 0.3);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 28px 32px;
+            background: linear-gradient(135deg, #8B7355, #A0826D);
+            color: white;
+            border-radius: 24px 24px 0 0;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .modal-close {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(90deg);
+        }
+
+        .modal-body {
+            padding: 32px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #f5deb3;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid rgba(222, 184, 135, 0.3);
+            border-radius: 12px;
+            font-size: 15px;
+            transition: all 0.3s;
+            background: rgba(139, 115, 85, 0.2);
+            font-family: inherit;
+            color: #f5deb3;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #DEB887;
+            background: rgba(139, 115, 85, 0.3);
+            box-shadow: 0 0 0 4px rgba(222, 184, 135, 0.1);
+        }
+
+        .btn-full {
+            width: 100%;
+        }
+
+        .image-count-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #8B7355, #A0826D);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            margin-left: 8px;
+            font-weight: 600;
+        }
+
+        .image-inputs-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .image-input-group {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .btn-remove-image {
+            padding: 8px 12px;
+            background: linear-gradient(135deg, #8B4513, #A0522D);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-add-image {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #8B7355, #A0826D);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            margin-top: 8px;
+            transition: all 0.3s;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #696969, #808080);
+            color: white;
+        }
+
+        .image-preview-container {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+        }
+
+        .image-preview {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 2px solid rgba(222, 184, 135, 0.3);
+        }
+
+        /* Success notification */
+        .success-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #8B7355, #A0826D);
+            color: white;
+            padding: 16px 24px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+            z-index: 10001;
+            animation: slideIn 0.3s ease-out;
+            font-weight: 600;
+            border: 1px solid rgba(222, 184, 135, 0.5);
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(400px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes slideOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(400px); opacity: 0; }
+        }
+
+        @media (max-width: 768px) {
+            .admin-sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+
+            .admin-main {
+                margin-left: 0;
+            }
+
+            .admin-header {
+                flex-direction: column;
+                gap: 16px;
+            }
+
+            .products-table {
+                padding: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-layout">
+        <!-- Sidebar -->
+        <aside class="admin-sidebar">
+            <div class="admin-logo">
+                <h2>🌹 Admin Panel</h2>
+            </div>
+
+            <!-- Admin Profile Section -->
+            <div class="admin-profile">
+                <div class="profile-picture-wrapper">
+                    <div class="profile-picture">
+                        <img id="admin-profile-pic" src="" alt="Admin" style="display: none;">
+                        <div id="admin-profile-placeholder" class="profile-placeholder">👤</div>
+                    </div>
+                    <label class="profile-upload-btn" title="Upload profile picture">
+                        <input type="file" id="admin-avatar-input" accept="image/*">
+                        📷
+                    </label>
+                </div>
+                <div class="profile-info">
+                    <div class="profile-name" id="admin-name">Admin User</div>
+                    <div class="profile-role">Administrator</div>
+                </div>
+            </div>
+
+            <nav class="admin-nav">
+                <a href="admin-dashboard.html" class="nav-link">
+                    <span>📊</span> Dashboard
+                </a>
+                <a href="admin-products.html" class="nav-link active">
+                    <span>🛍️</span> Products
+                </a>
+                <a href="admin-orders.html" class="nav-link">
+                    <span>📦</span> Orders
+                </a>
+                <a href="admin-users.html" class="nav-link">
+                    <span>👥</span> Users
+                </a>
+                <a href="admin-riders.html" class="nav-link">
+                    <span>🛵</span> Delivery Riders
+                     <a href="admin-feedback.html" class="nav-link active">
+                    <span>⭐</span> Customer Feedback
+                    <span class="notification-badge" id="feedback-badge" style="display: none;">0</span>
+                </a>
+                </a>
+                <a href="admin-payments.html" class="nav-link">
+                    <span>💳</span> Payments
+                </a>
+                <button id="logout-btn" class="nav-link logout-btn">
+                    <span>🚪</span> Logout
+                </button>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+            <header class="admin-header">
+                <h1>🛍️ Product Management</h1>
+                <button class="btn-primary" id="open-add-product-modal">➕ Add New Product</button>
+            </header>
+
+            <div class="products-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Image</th>
+                            <th>Name</th>
+                            <th>Category</th>
+                            <th>Price</th>
+                            <th>Images</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="products-tbody">
+                        <tr>
+                            <td colspan="6" style="text-align: center; padding: 40px;">
+                                <div style="font-size: 16px; color: #DEB887;">Loading products...</div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add/Edit Product Modal -->
+    <div class="modal" id="product-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title">➕ Add Product</h2>
+                <button class="modal-close" id="close-product-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="product-form">
+                    <input type="hidden" id="product-id">
+                    
+                    <div class="form-group">
+                        <label for="product-name">📝 Product Name *</label>
+                        <input type="text" id="product-name" required placeholder="Enter product name">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="product-category">📂 Category *</label>
+                        <select id="product-category" required>
+                            <option value="cake">🎂 Cake</option>
+                            <option value="bouquet">💐 Bouquet</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="product-price">💰 Price (₱) *</label>
+                        <input type="number" id="product-price" required min="0" step="0.01" placeholder="0.00">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="product-description">📄 Description *</label>
+                        <textarea id="product-description" required rows="4" placeholder="Enter product description"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>📸 Product Images * <span class="image-count-badge" id="image-count">0 images</span></label>
+                        <div class="image-inputs-container" id="image-inputs">
+                            <div class="image-input-group">
+                                <input type="file" class="image-file-input" accept="image/*" required>
+                                <button type="button" class="btn-remove-image" style="display: none;">Remove</button>
+                            </div>
+                        </div>
+                        <button type="button" class="btn-add-image" id="add-image-btn">➕ Add Another Image</button>
+                        <div class="image-preview-container" id="image-previews"></div>
+                    </div>
+                    
+                    <button type="submit" class="btn-primary btn-full">💾 Save Product</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal" id="delete-modal">
+        <div class="modal-content" style="max-width: 400px;">
+            <div class="modal-header">
+                <h2>⚠️ Confirm Delete</h2>
+                <button class="modal-close" id="close-delete-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p style="margin-bottom: 24px; color: #f5deb3;">Are you sure you want to delete this product?</p>
+                <div style="display: flex; gap: 12px;">
+                    <button class="btn-delete btn-full" id="confirm-delete-btn">🗑️ Delete</button>
+                    <button class="btn-secondary btn-full" id="cancel-delete-btn">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="js/admin-products.js"></script>
+</body>
+</html>

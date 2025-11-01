@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - Florist & Cake Shop</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #2C1810 0%, #1a0f0a 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Animated Background Elements */
+        body::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(222, 184, 135, 0.08) 0%, transparent 70%);
+            animation: float 20s infinite ease-in-out;
+            z-index: 0;
+        }
+
+        body::after {
+            content: '';
+            position: absolute;
+            bottom: -50%;
+            left: -50%;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(139, 115, 85, 0.08) 0%, transparent 70%);
+            animation: float 25s infinite ease-in-out reverse;
+            z-index: 0;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(30px, -30px) rotate(5deg); }
+            66% { transform: translate(-20px, 20px) rotate(-5deg); }
+        }
+
+        /* Decorative shapes */
+        .shape {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.05;
+            z-index: 0;
+        }
+
+        .shape1 {
+            width: 400px;
+            height: 400px;
+            background: #DEB887;
+            top: -100px;
+            left: -100px;
+            animation: pulse 8s infinite ease-in-out;
+        }
+
+        .shape2 {
+            width: 300px;
+            height: 300px;
+            background: #8B7355;
+            bottom: -50px;
+            right: -50px;
+            animation: pulse 10s infinite ease-in-out 2s;
+        }
+
+        .shape3 {
+            width: 200px;
+            height: 200px;
+            background: #A0826D;
+            top: 50%;
+            left: 10%;
+            animation: pulse 12s infinite ease-in-out 4s;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.05; }
+            50% { transform: scale(1.2); opacity: 0.08; }
+        }
+
+        .login-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            max-width: 1100px;
+            width: 100%;
+            background: rgba(61, 40, 23, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(222, 184, 135, 0.2);
+            position: relative;
+            z-index: 1;
+        }
+
+        .left-panel {
+            background: linear-gradient(135deg, #8B7355 0%, #A0826D 100%);
+            padding: 60px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Animated pattern overlay */
+        .left-panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(255, 255, 255, 0.03) 0%, transparent 50%);
+            animation: patternMove 20s infinite linear;
+        }
+
+        @keyframes patternMove {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(10px, 10px); }
+        }
+
+        .left-panel h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            font-weight: 700;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .left-panel p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 40px;
+            opacity: 0.95;
+            position: relative;
+            z-index: 1;
+        }
+
+        .illustration {
+            display: flex;
+            gap: 30px;
+            margin-top: 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .person {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: bounce 3s infinite ease-in-out;
+        }
+
+        .person:nth-child(2) {
+            animation-delay: 0.5s;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        .person-head {
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            margin-bottom: 10px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .person-body {
+            width: 80px;
+            height: 100px;
+            border-radius: 40px 40px 0 0;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .person:first-child .person-body {
+            background: rgba(100, 100, 100, 0.4);
+        }
+
+        .person:last-child .person-body {
+            background: rgba(255, 230, 0, 0.7);
+        }
+
+        .right-panel {
+            padding: 60px 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: linear-gradient(180deg, rgba(45, 31, 19, 0.95) 0%, rgba(61, 40, 23, 0.95) 100%);
+            position: relative;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, rgba(222, 184, 135, 0.2), rgba(139, 115, 85, 0.2));
+            color: #DEB887;
+            padding: 10px 18px;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            width: fit-content;
+            border: 1px solid rgba(222, 184, 135, 0.3);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .badge::before {
+            content: "⚙️";
+            font-size: 1rem;
+        }
+
+        .right-panel h2 {
+            font-size: 2rem;
+            color: #f5deb3;
+            margin-bottom: 8px;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .subtitle {
+            color: #DEB887;
+            margin-bottom: 30px;
+        }
+
+        .error-message {
+            background: rgba(244, 67, 54, 0.15);
+            color: #ff9999;
+            padding: 12px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: none;
+            font-size: 0.9rem;
+            border: 1px solid rgba(244, 67, 54, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .error-message.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #f5deb3;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid rgba(222, 184, 135, 0.2);
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            background: rgba(139, 115, 85, 0.15);
+            color: #f5deb3;
+            backdrop-filter: blur(10px);
+        }
+
+        .form-group input::placeholder {
+            color: rgba(245, 222, 179, 0.5);
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #DEB887;
+            background: rgba(139, 115, 85, 0.25);
+            box-shadow: 0 0 0 4px rgba(222, 184, 135, 0.1);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #8B7355 0%, #A0826D 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 8px 24px rgba(139, 115, 85, 0.4);
+            border: 1px solid rgba(222, 184, 135, 0.3);
+            margin-top: 10px;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(139, 115, 85, 0.5);
+        }
+
+        .login-btn:active {
+            transform: translateY(0);
+        }
+
+        .login-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .back-link {
+            text-align: center;
+            margin-top: 24px;
+            color: #DEB887;
+            font-size: 0.9rem;
+        }
+
+        .back-link a {
+            color: #F4A460;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .back-link a:hover {
+            color: #DEB887;
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .login-container {
+                grid-template-columns: 1fr;
+                border-radius: 20px;
+            }
+
+            .left-panel {
+                padding: 40px 30px;
+            }
+
+            .left-panel h1 {
+                font-size: 2rem;
+            }
+
+            .left-panel p {
+                font-size: 1rem;
+            }
+
+            .illustration {
+                margin-top: 20px;
+            }
+
+            .right-panel {
+                padding: 40px 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="shape shape1"></div>
+    <div class="shape shape2"></div>
+    <div class="shape shape3"></div>
+
+    <div class="login-container">
+        <div class="left-panel">
+            <h1>Simplify<br>management with<br>our dashboard.</h1>
+            <p>Manage your orders, track deliveries, and explore your beautiful collection of flowers and cakes all in one place.</p>
+            
+            <div class="illustration">
+                <div class="person">
+                    <div class="person-head"></div>
+                    <div class="person-body"></div>
+                </div>
+                <div class="person">
+                    <div class="person-head"></div>
+                    <div class="person-body"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="right-panel">
+            <div class="badge">Admin Portal</div>
+            <h2>Welcome Back</h2>
+            <p class="subtitle">Login to your admin account</p>
+
+            <div id="error-message" class="error-message"></div>
+
+            <form id="admin-login-form">
+                <div class="form-group">
+                    <label for="email">Admin Email</label>
+                    <input type="email" id="email" required placeholder="admin@florist.com">
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" required placeholder="••••••••">
+                </div>
+
+                <button type="submit" class="login-btn" id="login-btn">
+                    Login to Dashboard
+                </button>
+
+                <div class="back-link">
+                    <a href="index.html">← Back to Store</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script type="module">
+        // Import your Firebase configuration
+        import { auth, signInWithEmailAndPassword, isAdmin } from "./js/firebase-config.js"
+
+        const adminLoginForm = document.getElementById("admin-login-form")
+        const errorMessage = document.getElementById("error-message")
+        const loginBtn = document.getElementById("login-btn")
+
+        adminLoginForm.addEventListener("submit", async (e) => {
+            e.preventDefault()
+
+            if (errorMessage) {
+                errorMessage.textContent = ""
+                errorMessage.classList.remove("active")
+            }
+
+            // Disable button during login
+            loginBtn.disabled = true
+            loginBtn.textContent = "Logging in..."
+
+            const email = document.getElementById("email").value.trim()
+            const password = document.getElementById("password").value
+
+            if (!isAdmin(email)) {
+                if (errorMessage) {
+                    errorMessage.textContent = "Invalid admin credentials."
+                    errorMessage.classList.add("active")
+                }
+                loginBtn.disabled = false
+                loginBtn.textContent = "Login to Dashboard"
+                return
+            }
+
+            try {
+                await signInWithEmailAndPassword(auth, email, password)
+
+                localStorage.setItem(
+                    "adminUser",
+                    JSON.stringify({
+                        email: email,
+                        role: "admin",
+                        loginTime: new Date().toISOString(),
+                    }),
+                )
+
+                loginBtn.textContent = "Success! Redirecting..."
+                setTimeout(() => {
+                    window.location.href = "admin-dashboard.html"
+                }, 500)
+            } catch (error) {
+                console.error("Admin login error:", error)
+                let message = "Login failed. Please check your credentials."
+
+                if (error.code === "auth/user-not-found") {
+                    message = "Admin account not found. Please contact system administrator."
+                } else if (error.code === "auth/wrong-password") {
+                    message = "Incorrect password."
+                } else if (error.code === "auth/invalid-email") {
+                    message = "Invalid email format."
+                } else if (error.code === "auth/too-many-requests") {
+                    message = "Too many failed attempts. Please try again later."
+                }
+
+                if (errorMessage) {
+                    errorMessage.textContent = message
+                    errorMessage.classList.add("active")
+                }
+
+                loginBtn.disabled = false
+                loginBtn.textContent = "Login to Dashboard"
+            }
+        })  
+    </script>
+</body>
+</html>

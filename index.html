@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Florist & Cake Shop - 🏡</title>
+    <link rel="stylesheet" href="css/styles.css">
+     <link rel="stylesheet" href="css/homepage.css">
+</head>
+<body>
+    <div id="header-container"></div>
+    
+    <div id="breadcrumb-container"></div>
+
+    <main class="main-content">
+        
+        <!-- Enhanced Hero Carousel -->
+        <section class="hero-carousel">
+            <div class="carousel-container">
+                <div class="carousel-slide active">
+                    <img src="images/bouquet3.jfif" alt="Beautiful Bouquets">
+                    <div class="carousel-overlay">
+                        <div class="carousel-content">
+                            <h2 class="carousel-title">Premium Flower Arrangements</h2>
+                            <p class="carousel-subtitle">Handcrafted with love for your special moments</p>
+                            <a href="shop.html?category=bouquets" class="btn-carousel">Shop Bouquets</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-slide">
+                    <img src="images/cakes.webp" alt="Delicious Cakes">
+                    <div class="carousel-overlay">
+                        <div class="carousel-content">
+                            <h2 class="carousel-title">Artisan Cakes & Desserts</h2>
+                            <p class="carousel-subtitle">Celebrate life's sweetest moments with us</p>
+                            <a href="shop.html?category=cakes" class="btn-carousel">Shop Cakes</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-slide">
+                    <img src="images/bouquet4.jfif" alt="Special Occasions">
+                    <div class="carousel-overlay">
+                        <div class="carousel-content">
+                            <h2 class="carousel-title">Special Occasion Collections</h2>
+                            <p class="carousel-subtitle">Make every moment unforgettable</p>
+                            <a href="shop.html" class="btn-carousel">Explore All</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button class="carousel-btn prev" onclick="changeSlide(-1)">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M15 18l-6-6 6-6"/>
+                </svg>
+            </button>
+            <button class="carousel-btn next" onclick="changeSlide(1)">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M9 18l6-6-6-6"/>
+                </svg>
+            </button>
+            <div class="carousel-indicators">
+                <span class="indicator active" onclick="goToSlide(0)"></span>
+                <span class="indicator" onclick="goToSlide(1)"></span>
+                <span class="indicator" onclick="goToSlide(2)"></span>
+            </div>
+        </section>
+
+        <!-- Category Quick Access Section -->
+        <section class="category-section">
+            <div class="category-grid">
+                <div class="category-card" onclick="window.location.href='shop.html?category=bouquets'">
+                    <div class="category-icon">💐</div>
+                    <h3>Bouquets</h3>
+                    <p>Fresh & Beautiful</p>
+                </div>
+                <div class="category-card" onclick="window.location.href='shop.html?category=cakes'">
+                    <div class="category-icon">🎂</div>
+                    <h3>Cakes</h3>
+                    <p>Delicious & Custom</p>
+                </div>
+                <div class="category-card" onclick="window.location.href='shop.html?category=occasions'">
+                    <div class="category-icon">🎉</div>
+                    <h3>Occasions</h3>
+                    <p>Special Moments</p>
+                </div>
+                <div class="category-card" onclick="window.location.href='shop.html?category=gifts'">
+                    <div class="category-icon">🎁</div>
+                    <h3>Gift Sets</h3>
+                    <p>Perfect Combos</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Featured Products Section -->
+        <section class="featured-products">
+            <div class="section-header">
+                <h2>Featured Products</h2>
+                <p class="section-subtitle">Handpicked selections just for you</p>
+            </div>
+            <div class="product-grid" id="featured-products">
+                <!-- Products will be loaded dynamically -->
+            </div>
+            <div class="section-footer">
+                <a href="shop.html" class="btn-secondary">View All Products</a>
+            </div>
+        </section>
+
+        <!-- Features/Benefits Section -->
+        <section class="features-section">
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🚚</div>
+                    <h3>Discount</h3>
+                    <p>On orders over ₱1000</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🌸</div>
+                    <h3>Fresh Products</h3>
+                    <p>Daily fresh selections</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💳</div>
+                    <h3>Secure Payment</h3>
+                    <p>100% secure transactions</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⭐</div>
+                    <h3>Quality Assured</h3>
+                    <p>Premium quality guaranteed</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div id="footer-container"></div>
+
+    <script type="module" src="js/firebase-config.js"></script>
+    <script type="module" src="js/home.js"></script>
+</body>
+</html>

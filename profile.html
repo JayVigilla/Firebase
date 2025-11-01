@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - Florist & Cake Shop</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #1FC9FD 0%, #FC006D 100%);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Animated background elements */
+        body::before,
+        body::after {
+            content: '';
+            position: fixed;
+            border-radius: 50%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        body::before {
+            width: 700px;
+            height: 700px;
+            background: radial-gradient(circle, rgba(252, 0, 109, 0.15) 0%, transparent 70%);
+            top: -250px;
+            right: -250px;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        body::after {
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(31, 201, 253, 0.15) 0%, transparent 70%);
+            bottom: -200px;
+            left: -200px;
+            animation: float 25s infinite ease-in-out reverse;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(30px, -30px) rotate(3deg); }
+            66% { transform: translate(-20px, 20px) rotate(-3deg); }
+        }
+
+        .main-content {
+            position: relative;
+            z-index: 1;
+            padding: 2rem 1rem;
+            min-height: 100vh;
+        }
+
+        .profile-wrapper {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Profile Header Card */
+        .profile-header-card {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            margin-bottom: 2rem;
+        }
+
+        .profile-banner {
+            height: 200px;
+            background: linear-gradient(135deg, #1FC9FD 0%, #FC006D 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .profile-banner::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                radial-gradient(circle at 25% 75%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 75% 25%, rgba(255, 255, 255, 0.08) 0%, transparent 50%);
+            animation: patternFloat 25s infinite linear;
+        }
+
+        @keyframes patternFloat {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(15px, 15px); }
+        }
+
+        .profile-header-content {
+            padding: 0 2rem 2rem;
+            margin-top: -80px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .profile-avatar-section {
+            display: flex;
+            gap: 2rem;
+            align-items: flex-end;
+        }
+
+        .profile-avatar-wrapper {
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .profile-avatar {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 5px solid white;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            object-fit: cover;
+            background: white;
+        }
+
+        .avatar-upload-btn {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #1FC9FD, #FC006D);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(31, 201, 253, 0.5);
+            transition: all 0.3s ease;
+            color: white;
+        }
+
+        .avatar-upload-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(31, 201, 253, 0.7);
+        }
+
+        .profile-header-info {
+            flex: 1;
+            padding-top: 1rem;
+        }
+
+        .profile-header-info h1 {
+            font-size: 2.2rem;
+            color: #1a1a1a;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .profile-header-info p {
+            color: #666;
+            font-size: 1.05rem;
+            margin-bottom: 1rem;
+        }
+
+        .profile-stats {
+            display: flex;
+            gap: 3rem;
+            padding-top: 1rem;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            background: linear-gradient(135deg, rgba(31, 201, 253, 0.1), rgba(252, 0, 109, 0.1));
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #1FC9FD, #FC006D);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+            margin-bottom: 0.4rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+
+        /* Main Container */
+        .profile-container {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 2rem;
+        }
+
+        /* Sidebar */
+        .profile-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .profile-nav {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 1.2rem;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 16px;
+            border-radius: 12px;
+            text-decoration: none;
+            color: #666;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            margin-bottom: 6px;
+        }
+
+        .nav-item svg {
+            flex-shrink: 0;
+        }
+
+        .nav-item:hover {
+            background: linear-gradient(135deg, rgba(31, 201, 253, 0.1), rgba(252, 0, 109, 0.1));
+            color: #1FC9FD;
+            transform: translateX(5px);
+        }
+
+        .nav-item.active {
+            background: linear-gradient(135deg, #1FC9FD, #FC006D);
+            color: white;
+            box-shadow: 0 4px 15px rgba(31, 201, 253, 0.4);
+        }
+
+        .logout-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 14px;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            border: 2px solid transparent;
+            background-image: linear-gradient(white, white), linear-gradient(135deg, #1FC9FD, #FC006D);
+            background-origin: border-box;
+            background-clip: padding-box, border-box;
+            border-radius: 12px;
+            color: #1FC9FD;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .logout-btn:hover {
+            background: linear-gradient(135deg, #1FC9FD, #FC006D);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(31, 201, 253, 0.4);
+        }
+
+        /* Content Area */
+        .profile-content {
+            min-height: 500px;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeInUp 0.4s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Content Card */
+        .content-card {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .card-header h2 {
+            font-size: 1.8rem;
+            color: #1a1a1a;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .card-header p {
+            color: #666;
+            font-size: 1rem;
+        }
+
+        /* Form Styles */
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.6rem;
+            font-size: 0.95rem;
+        }
+
+        .form-group label svg {
+            color: #1FC9FD;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            padding: 14px 16px;
+            border: 2px solid #e8e8e8;
+            border-radius: 12px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #1FC9FD;
+            box-shadow: 0 0 0 4px rgba(31, 201, 253, 0.1), 0 4px 12px rgba(0, 0, 0, 0.08);
+            transform: translateY(-1px);
+        }
+
+        .form-group input:disabled {
+            background: #f5f5f5;
+            cursor: not-allowed;
+            color: #999;
+        }
+
+        /* Buttons */
+        .btn-primary,
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 14px 32px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #1FC9FD, #FC006D);
+            color: white;
+            box-shadow: 0 6px 20px rgba(31, 201, 253, 0.35);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 28px rgba(31, 201, 253, 0.45);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #1FC9FD;
+            border: 2px solid #1FC9FD;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, #1FC9FD, #FC006D);
+            color: white;
+            border-color: transparent;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(31, 201, 253, 0.4);
+        }
+
+        /* Order History */
+        #order-history {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .order-item {
+            background: linear-gradient(135deg, rgba(31, 201, 253, 0.05), rgba(252, 0, 109, 0.05));
+            border-radius: 15px;
+            padding: 1.5rem;
+            border-left: 4px solid;
+            border-image: linear-gradient(135deg, #1FC9FD, #FC006D) 1;
+            transition: all 0.3s ease;
+        }
+
+        .order-item:hover {
+            transform: translateX(8px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .order-header strong {
+            font-size: 1.1rem;
+            color: #1a1a1a;
+        }
+
+        .order-status {
+            padding: 8px 18px;
+            border-radius: 25px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .order-status.pending {
+            background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+            color: #856404;
+        }
+
+        .order-status.processing {
+            background: linear-gradient(135deg, #cfe2ff, #a8d5ff);
+            color: #084298;
+        }
+
+        .order-status.completed {
+            background: linear-gradient(135deg, #d1e7dd, #b5e7cf);
+            color: #0f5132;
+        }
+
+        .order-status.cancelled {
+            background: linear-gradient(135deg, #f8d7da, #ffb3b8);
+            color: #842029;
+        }
+
+        .order-item p {
+            color: #666;
+            margin: 0.5rem 0;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: #999;
+            font-size: 1.1rem;
+        }
+
+        /* Addresses Section */
+        #addresses-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .address-card {
+            background: linear-gradient(135deg, rgba(31, 201, 253, 0.05), rgba(252, 0, 109, 0.05));
+            border-radius: 15px;
+            padding: 1.5rem;
+            border: 2px solid #e8e8e8;
+            transition: all 0.3s ease;
+        }
+
+        .address-card:hover {
+            border-color: #1FC9FD;
+            box-shadow: 0 8px 25px rgba(31, 201, 253, 0.15);
+            transform: translateY(-3px);
+        }
+
+        .address-card.default {
+            border: 2px solid;
+            border-image: linear-gradient(135deg, #1FC9FD, #FC006D) 1;
+            background: linear-gradient(135deg, rgba(31, 201, 253, 0.1), rgba(252, 0, 109, 0.1));
+        }
+
+        .address-badge {
+            display: inline-block;
+            padding: 6px 14px;
+            background: linear-gradient(135deg, #1FC9FD, #FC006D);
+            color: white;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            box-shadow: 0 2px 8px rgba(31, 201, 253, 0.3);
+        }
+
+        /* Notification Styles */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 16px 24px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 500;
+            animation: slideIn 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .notification.success {
+            background: linear-gradient(135deg, #d1e7dd, #b5e7cf);
+            color: #0f5132;
+        }
+
+        .notification.error {
+            background: linear-gradient(135deg, #f8d7da, #ffb3b8);
+            color: #842029;
+        }
+
+        .notification.info {
+            background: linear-gradient(135deg, #cfe2ff, #a8d5ff);
+            color: #084298;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .profile-container {
+                grid-template-columns: 240px 1fr;
+            }
+
+            .profile-stats {
+                gap: 2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .profile-wrapper {
+                padding: 0;
+            }
+
+            .main-content {
+                padding: 1rem;
+            }
+
+            .profile-container {
+                grid-template-columns: 1fr;
+            }
+
+            .profile-sidebar {
+                order: 2;
+            }
+
+            .profile-content {
+                order: 1;
+            }
+
+            .profile-nav {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.5rem;
+            }
+
+            .nav-item span {
+                display: none;
+            }
+
+            .nav-item {
+                justify-content: center;
+            }
+
+            .logout-btn {
+                grid-column: 1 / -1;
+            }
+
+            .profile-avatar-section {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+
+            .profile-stats {
+                justify-content: center;
+                flex-wrap: wrap;
+                gap: 1rem;
+            }
+
+            .stat-item {
+                padding: 0.8rem 1.2rem;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .content-card {
+                padding: 1.5rem;
+            }
+
+            #addresses-list {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .profile-banner {
+                height: 150px;
+            }
+
+            .profile-avatar {
+                width: 120px;
+                height: 120px;
+            }
+
+            .profile-header-content {
+                padding: 0 1rem 1.5rem;
+                margin-top: -60px;
+            }
+
+            .profile-header-info h1 {
+                font-size: 1.6rem;
+            }
+
+            .stat-value {
+                font-size: 1.6rem;
+            }
+
+            .notification {
+                left: 10px;
+                right: 10px;
+                top: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="header-container"></div>
+    <div id="breadcrumb-container"></div>
+
+    <main class="main-content">
+        <div class="profile-wrapper">
+            <!-- Profile Header Card -->
+            <div class="profile-header-card">
+                <div class="profile-banner"></div>
+                <div class="profile-header-content">
+                    <div class="profile-avatar-section">
+                        <div class="profile-avatar-wrapper">
+                            <img src="https://ui-avatars.com/api/?name=User&size=150&background=1FC9FD&color=fff" 
+                                 alt="Profile" 
+                                 id="profile-avatar"
+                                 class="profile-avatar">
+                            <label for="avatar-upload" class="avatar-upload-btn" title="Change photo">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                                    <circle cx="12" cy="13" r="4"></circle>
+                                </svg>
+                            </label>
+                            <input type="file" id="avatar-upload" accept="image/*" style="display: none;">
+                        </div>
+                        <div class="profile-header-info">
+                            <h1 id="header-name">Loading...</h1>
+                            <p id="header-email">Loading...</p>
+                            <div class="profile-stats">
+                                <div class="stat-item">
+                                    <span class="stat-value" id="total-orders">0</span>
+                                    <span class="stat-label">Orders</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-value" id="total-spent">₱0</span>
+                                    <span class="stat-label">Total Spent</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-value" id="member-since">2024</span>
+                                    <span class="stat-label">Member Since</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="profile-container">
+                <!-- Sidebar Navigation -->
+                <div class="profile-sidebar">
+                    <nav class="profile-nav">
+                        <a href="#" class="nav-item active" data-tab="info">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="12" cy="7" r="4"></circle>
+                            </svg>
+                            <span>Personal Info</span>
+                        </a>
+                        <a href="#" class="nav-item" data-tab="orders">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                                <line x1="3" y1="6" x2="21" y2="6"></line>
+                                <path d="M16 10a4 4 0 0 1-8 0"></path>
+                            </svg>
+                            <span>Order History</span>
+                        </a>
+                        <a href="#" class="nav-item" data-tab="addresses">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                <circle cx="12" cy="10" r="3"></circle>
+                            </svg>
+                            <span>Addresses</span>
+                        </a>
+                        <a href="#" class="nav-item" data-tab="security">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                            </svg>
+                            <span>Security</span>
+                        </a>
+                    </nav>
+                    <button class="logout-btn" id="logout-btn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                            <polyline points="16 17 21 12 16 7"></polyline>
+                            <line x1="21" y1="12" x2="9" y2="12"></line>
+                        </svg>
+                        Logout
+                    </button>
+                </div>
+
+                <!-- Content Area -->
+                <div class="profile-content">
+                    <!-- Personal Info Tab -->
+                    <div class="tab-content active" id="info-tab">
+                        <div class="content-card">
+                            <div class="card-header">
+                                <h2>Personal Information</h2>
+                                <p>Update your personal details</p>
+                            </div>
+                            <form id="profile-form">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="fullName">
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                                <circle cx="12" cy="7" r="4"></circle>
+                                            </svg>
+                                            Full Name
+                                        </label>
+                                        <input type="text" id="fullName" placeholder="Enter your full name" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="email">
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                                                <polyline points="22,6 12,13 2,6"></polyline>
+                                            </svg>
+                                            Email Address
+                                        </label>
+                                        <input type="email" id="email" disabled>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="phone">
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                                            </svg>
+                                            Phone Number
+                                        </label>
+                                        <input type="tel" id="phone" placeholder="+63 123 456 7890" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="birthday">
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                                <line x1="16" y1="2" x2="16" y2="6"></line>
+                                                <line x1="8" y1="2" x2="8" y2="6"></line>
+                                                <line x1="3" y1="10" x2="21" y2="10"></line>
+                                            </svg>
+                                            Birthday
+                                        </label>
+                                        <input type="date" id="birthday">
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn-primary">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                                        <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                                        <polyline points="7 3 7 8 15 8"></polyline>
+                                    </svg>
+                                    Save Changes
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Order History Tab -->
+                    <div class="tab-content" id="orders-tab">
+                        <div class="content-card">
+                            <div class="card-header">
+                                <h2>Order History</h2>
+                                <p>Track and manage your orders</p>
+                            </div>
+                            <div id="order-history">
+                                <p class="empty-state">No orders yet</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Addresses Tab -->
+                    <div class="tab-content" id="addresses-tab">
+                        <div class="content-card">
+                            <div class="card-header">
+                                <h2>Delivery Addresses</h2>
+                                <p>Manage your shipping addresses</p>
+                            </div>
+                            <div id="addresses-list">
+                                <p class="empty-state">No saved addresses yet</p>
+                            </div>
+                            <button class="btn-secondary" id="add-address-btn">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                </svg>
+                                Add New Address
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Security Tab -->
+                    <div class="tab-content" id="security-tab">
+                        <div class="content-card">
+                            <div class="card-header">
+                                <h2>Security Settings</h2>
+                                <p>Manage your password and security</p>
+                            </div>
+                            <form id="password-form">
+                                <div class="form-group">
+                                    <label for="current-password">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                                        </svg>
+                                        Current Password
+                                    </label>
+                                    <input type="password" id="current-password" placeholder="Enter current password">
+                                </div>
+                                <div class="form-group">
+                                    <label for="new-password">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                                        </svg>
+                                        New Password
+                                    </label>
+                                    <input type="password" id="new-password" placeholder="Enter new password">
+                                </div>
+                                <div class="form-group">
+                                    <label for="confirm-password">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                                        </svg>
+                                        Confirm New Password
+                                    </label>
+                                    <input type="password" id="confirm-password" placeholder="Confirm new password">
+                                </div>
+                                <button type="submit" class="btn-primary">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                                        <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                                        <polyline points="7 3 7 8 15 8"></polyline>
+                                    </svg>
+                                    Update Password
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div id="footer-container"></div>
+
+    <script type="module" src="js/components.js"></script>
+    <script type="module" src="js/profile.js"></script>
+</body>
+</html>

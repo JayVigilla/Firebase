@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delivery Riders - Admin</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #2C1810 0%, #1a0f0a 100%);
+            min-height: 100vh;
+        }
+
+        .admin-layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .admin-sidebar {
+            width: 280px;
+            background: linear-gradient(180deg, #3d2817 0%, #2d1f13 100%);
+            color: #f5deb3;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            box-shadow: 4px 0 30px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            border-right: 1px solid rgba(222, 184, 135, 0.1);
+        }
+
+        .admin-sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .admin-sidebar::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .admin-sidebar::-webkit-scrollbar-thumb {
+            background: #8B7355;
+            border-radius: 10px;
+        }
+
+        .admin-logo {
+            padding: 24px;
+            border-bottom: 1px solid rgba(222, 184, 135, 0.2);
+            background: linear-gradient(135deg, rgba(139, 115, 85, 0.2), transparent);
+        }
+
+        .admin-logo h2 {
+            background: linear-gradient(135deg, #DEB887, #F4A460);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 0;
+            font-size: 24px;
+            font-weight: 700;
+            text-shadow: 0 2px 10px rgba(222, 184, 135, 0.3);
+        }
+
+        .admin-profile {
+            padding: 24px;
+            border-bottom: 1px solid rgba(222, 184, 135, 0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+            background: linear-gradient(135deg, rgba(139, 115, 85, 0.1), transparent);
+        }
+
+        .profile-picture-wrapper {
+            position: relative;
+            width: 100px;
+            height: 100px;
+        }
+
+        .profile-picture {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 4px solid rgba(222, 184, 135, 0.4);
+            overflow: hidden;
+            background: linear-gradient(135deg, #8B7355, #A0826D);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s;
+        }
+
+        .profile-picture:hover {
+            border-color: #DEB887;
+            transform: scale(1.05);
+            box-shadow: 0 12px 32px rgba(222, 184, 135, 0.3);
+        }
+
+        .profile-picture img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-placeholder {
+            font-size: 48px;
+            color: #f5deb3;
+        }
+
+        .profile-upload-btn {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #DEB887, #D2691E);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+            transition: all 0.3s;
+            border: 3px solid #3d2817;
+        }
+
+        .profile-upload-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(222, 184, 135, 0.5);
+        }
+
+        .profile-upload-btn input {
+            display: none;
+        }
+
+        .profile-info {
+            text-align: center;
+            width: 100%;
+        }
+
+        .profile-name {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            color: #f5deb3;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .profile-role {
+            font-size: 13px;
+            color: #DEB887;
+            background: rgba(222, 184, 135, 0.2);
+            padding: 4px 12px;
+            border-radius: 12px;
+            display: inline-block;
+            border: 1px solid rgba(222, 184, 135, 0.3);
+        }
+
+        .admin-nav {
+            padding: 24px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .nav-link {
+            padding: 14px 20px;
+            color: rgba(245, 222, 179, 0.8);
+            text-decoration: none;
+            border-radius: 12px;
+            transition: all 0.3s;
+            border: none;
+            background: transparent;
+            text-align: left;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 500;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-link:hover {
+            background: rgba(222, 184, 135, 0.15);
+            color: #f5deb3;
+            transform: translateX(4px);
+        }
+
+        .nav-link.active {
+            background: linear-gradient(90deg, rgba(222, 184, 135, 0.25), rgba(210, 105, 30, 0.15));
+            color: #f5deb3;
+            font-weight: 600;
+            border-left: 4px solid #DEB887;
+            box-shadow: 0 4px 12px rgba(222, 184, 135, 0.2);
+        }
+
+        .logout-btn {
+            margin-top: 24px;
+            border-top: 1px solid rgba(222, 184, 135, 0.2);
+            padding-top: 24px;
+            background: rgba(244, 67, 54, 0.15) !important;
+            color: #ff9999 !important;
+        }
+
+        .logout-btn:hover {
+            background: rgba(244, 67, 54, 0.25) !important;
+        }
+
+        .admin-main {
+            margin-left: 280px;
+            flex: 1;
+            padding: 32px;
+            min-height: 100vh;
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+            background: rgba(61, 40, 23, 0.8);
+            backdrop-filter: blur(20px);
+            padding: 24px 32px;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(222, 184, 135, 0.2);
+        }
+
+        .admin-header h1 {
+            margin: 0;
+            background: linear-gradient(135deg, #DEB887, #F4A460);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 32px;
+            font-weight: 800;
+        }
+
+        .btn-primary {
+            padding: 14px 28px;
+            background: linear-gradient(135deg, #8B7355, #A0826D);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(222, 184, 135, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(139, 115, 85, 0.5);
+        }
+
+        .riders-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 24px;
+        }
+
+        .rider-card {
+            background: rgba(61, 40, 23, 0.6);
+            backdrop-filter: blur(10px);
+            padding: 28px;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            transition: all 0.3s;
+            border: 1px solid rgba(222, 184, 135, 0.2);
+            border-left: 4px solid #e2e8f0;
+        }
+
+        .rider-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6);
+        }
+
+        .rider-card.status-online {
+            border-left-color: #4CAF50;
+        }
+
+        .rider-card.status-offline {
+            border-left-color: #f44336;
+        }
+
+        .rider-card h3 {
+            color: #f5deb3;
+            margin-bottom: 12px;
+        }
+
+        .rider-card p {
+            color: #DEB887;
+            margin-bottom: 8px;
+        }
+
+        /* MODAL STYLES - FIXED FOR DROPDOWN VISIBILITY */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+            overflow-y: auto; /* Allow scrolling */
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #3d2817, #2d1f13);
+            border-radius: 24px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(222, 184, 135, 0.3);
+            margin: auto; /* Center vertically when scrolling */
+            position: relative; /* Important for z-index stacking */
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 28px 32px;
+            background: linear-gradient(135deg, #8B7355, #A0826D);
+            color: white;
+            border-radius: 24px 24px 0 0;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .modal-close {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(90deg);
+        }
+
+        .modal-body {
+            padding: 32px;
+            max-height: calc(100vh - 300px);
+            overflow-y: auto;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+            position: relative; /* Important for dropdown positioning */
+            z-index: 1; /* Ensure proper stacking */
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #f5deb3;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid rgba(222, 184, 135, 0.3);
+            border-radius: 12px;
+            font-size: 15px;
+            transition: all 0.3s;
+            background: rgba(139, 115, 85, 0.2);
+            font-family: inherit;
+            color: #f5deb3;
+            /* CRITICAL: Remove backdrop-filter that was causing blur */
+            backdrop-filter: none;
+        }
+
+        /* Dropdown specific styles */
+        .form-group select {
+            appearance: none;
+            cursor: pointer;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23f5deb3' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            padding-right: 40px;
+        }
+
+        /* Dropdown option styles */
+        .form-group select option {
+            background: #3d2817;
+            color: #f5deb3;
+            padding: 12px;
+            font-size: 15px;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #DEB887;
+            background: rgba(139, 115, 85, 0.3);
+            box-shadow: 0 0 0 4px rgba(222, 184, 135, 0.1);
+        }
+
+        /* Ensure select dropdown appears above everything */
+        select:focus {
+            position: relative;
+            z-index: 1000;
+        }
+
+        .btn-full {
+            width: 100%;
+        }
+
+        @media (max-width: 768px) {
+            .admin-sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+            .admin-main {
+                margin-left: 0;
+            }
+            .riders-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .modal-content {
+                width: 95%;
+                max-width: none;
+            }
+            
+            .modal-body {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-layout">
+        <aside class="admin-sidebar">
+            <div class="admin-logo">
+                <h2>🌹 Admin Panel</h2>
+            </div>
+
+            <div class="admin-profile">
+                <div class="profile-picture-wrapper">
+                    <div class="profile-picture">
+                        <img id="admin-profile-pic" src="" alt="Admin" style="display: none;">
+                        <div id="admin-profile-placeholder" class="profile-placeholder">👤</div>
+                    </div>
+                    <label class="profile-upload-btn" title="Upload profile picture">
+                        <input type="file" id="admin-avatar-input" accept="image/*">
+                        📷
+                    </label>
+                </div>
+                <div class="profile-info">
+                    <div class="profile-name" id="admin-name">Admin User</div>
+                    <div class="profile-role">Administrator</div>
+                </div>
+            </div>
+
+            <nav class="admin-nav">
+                <a href="admin-dashboard.html" class="nav-link">
+                    <span>📊</span> Dashboard
+                </a>
+                <a href="admin-products.html" class="nav-link">
+                    <span>🛍️</span> Products
+                </a>
+                <a href="admin-orders.html" class="nav-link">
+                    <span>📦</span> Orders
+                </a>
+                <a href="admin-users.html" class="nav-link">
+                    <span>👥</span> Users
+                </a>
+                <a href="admin-riders.html" class="nav-link active">
+                    <span>🛵</span> Delivery Riders
+                </a>
+                <a href="admin-feedback.html" class="nav-link">
+                    <span>⭐</span> Customer Feedback
+                    <span class="notification-badge" id="feedback-badge" style="display: none;">0</span>
+                </a>
+                <a href="admin-payments.html" class="nav-link">
+                    <span>💳</span> Payments
+                </a>
+                <button id="logout-btn" class="nav-link logout-btn">
+                    <span>🚪</span> Logout
+                </button>
+            </nav>
+        </aside>
+
+        <main class="admin-main">
+            <header class="admin-header">
+                <h1>🛵 Delivery Riders</h1>
+                <button class="btn-primary" id="open-add-rider-modal">➕ Add Rider</button>
+            </header>
+
+            <div class="riders-grid" id="riders-grid">
+                <div style="grid-column: 1/-1; text-align: center; padding: 40px;">
+                    <div style="font-size: 16px; color: #DEB887;">Loading riders...</div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- ADD RIDER MODAL -->
+    <div class="modal" id="rider-add-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>➕ Add Delivery Rider</h2>
+                <button class="modal-close" id="close-add-rider-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="add-rider-form">
+                    <div class="form-group">
+                        <label for="rider-name">👤 Rider Name *</label>
+                        <input type="text" id="rider-name" required placeholder="Enter rider name">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="rider-phone">📱 Phone Number *</label>
+                        <input type="tel" id="rider-phone" required placeholder="Enter phone number">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="rider-vehicle">🚗 Vehicle Type *</label>
+                        <select id="rider-vehicle" required>
+                            <option value="">-- Select Vehicle --</option>
+                            <option value="motorcycle">🏍️ Motorcycle</option>
+                            <option value="bicycle">🚲 Bicycle</option>
+                            <option value="car">🚗 Car</option>
+                        </select>
+                    </div>
+                    
+                    <button type="submit" class="btn-primary btn-full">✓ Add Rider</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="js/admin-riders.js"></script>
+</body>
+</html>

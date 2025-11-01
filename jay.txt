@@ -1,0 +1,2 @@
+npx  @google-cloud/functions-framework  --target=sendOTP --port-8080
+
